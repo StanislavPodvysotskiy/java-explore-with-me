@@ -33,7 +33,7 @@ public class StatController {
         }
         List<String> urisList = new ArrayList<>(uris);
         if (uris.get(0).contains("[")) {
-            if(uris.size() == 1) {
+            if (uris.size() == 1) {
                 urisList.clear();
                 urisList.add(uris.get(0).substring(1, uris.get(0).length() - 1));
             } else {
