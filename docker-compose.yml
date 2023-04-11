@@ -1,7 +1,6 @@
 version: '3.1'
 services:
   stats-server:
-    platform: linux/amd64
     build: stat
     container_name: ewm-stats
     ports:
@@ -9,7 +8,6 @@ services:
     depends_on:
       - stats-db
     environment:
-      - DOCKER_DEFAULT_PLATFORM=linux/amd64
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=qwerty
       - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/stat
@@ -22,13 +20,11 @@ services:
     ports:
       - "6541:5432"
     environment:
-      - DOCKER_DEFAULT_PLATFORM=linux/amd64
       - POSTGRES_DB=stat
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=qwerty
 
   ewm-service:
-    platform: linux/amd64
     build: main
     container_name: ewm-main
     ports:
@@ -36,20 +32,17 @@ services:
     depends_on:
       - ewm-db
     environment:
-      - DOCKER_DEFAULT_PLATFORM=linux/amd64
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=qwerty
       - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5431/main
 
   ewm-db:
-    platform: linux/amd64
     image: postgres:14-alpine
     volumes:
       - /var/lib/postgresql/data/
     ports:
       - "7541:5431"
     environment:
-      - DOCKER_DEFAULT_PLATFORM=linux/amd64
       - POSTGRES_DB=main
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=qwerty
