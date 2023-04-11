@@ -21,17 +21,17 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <modules>
+        <module>stat-dto</module>
+        <module>stat-service</module>
+        <module>stat-client</module>
+    </modules>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
     </dependencies>
-
-    <modules>
-        <module>stat-dto</module>
-        <module>stat-service</module>
-        <module>stat-client</module>
-    </modules>
 
 </project>
