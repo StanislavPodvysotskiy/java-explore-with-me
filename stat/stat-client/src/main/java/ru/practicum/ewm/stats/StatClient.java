@@ -38,10 +38,11 @@ public class StatClient extends BaseClient {
             return get("?start={start}&end={end}&unique={unique}", parameters);
         }
         if (unique == null) {
-            parameters = Map.of("start", start,"end", end,"uris", uris);
+            parameters = Map.of("start", start,"end", end,"uris", String.join(",", uris));
             return get("?start={start}&end={end}&uris={uris}", parameters);
         }
-        parameters = Map.of("start", start,"end", end,"uris", uris,"unique", unique);
+        parameters = Map.of("start", start,"end", end,
+                "uris", String.join(",", uris),"unique", unique);
         return get("?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
     }
 }

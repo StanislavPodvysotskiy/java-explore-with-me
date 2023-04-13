@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.HitDto;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping(path = "/hit")
@@ -18,7 +19,7 @@ public class HitController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public HitDto save(@RequestBody HitDto hitDto, HttpServletRequest request) {
+    public HitDto save(@RequestBody @Valid HitDto hitDto, HttpServletRequest request) {
         log.info("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
         return hitService.save(hitDto);
     }
