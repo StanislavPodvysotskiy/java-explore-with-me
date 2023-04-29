@@ -68,7 +68,7 @@ public class StatClient extends BaseClient {
         body = body.substring(1);
         String[] objects = body.split(";");
         List<ViewStatsDto> viewStatsDtoList = new ArrayList<>();
-        for(String object : objects) {
+        for (String object : objects) {
             object = object.replace(" ", "");
             String[] parameters = object.split(",");
             ViewStatsDto viewStatsDto = new ViewStatsDto();
