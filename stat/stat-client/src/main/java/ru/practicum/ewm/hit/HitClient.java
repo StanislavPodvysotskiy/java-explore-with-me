@@ -10,6 +10,8 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.ewm.HitDto;
 import ru.practicum.ewm.client.BaseClient;
 
+import java.time.LocalDateTime;
+
 @Service
 public class HitClient extends BaseClient {
 
@@ -25,7 +27,16 @@ public class HitClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> save(HitDto hitDto) {
-        return post("", hitDto);
+    private void save(HitDto hitDto) {
+        post("", hitDto);
+    }
+
+    public void saveLink(String app, String uri, String ip) {
+        HitDto hitDto = new HitDto();
+        hitDto.setApp(app);
+        hitDto.setUri(uri);
+        hitDto.setIp(ip);
+        hitDto.setTimestamp(LocalDateTime.now());
+        save(hitDto);
     }
 }
