@@ -16,12 +16,12 @@ import javax.validation.constraints.Size;
 public class NewEventDto {
 
     @NotNull
-    @Size(min =20, max = 2000)
+    @Size(min = 20, max = 2000)
     private String annotation;
     @NotNull
     private Integer category;
     @NotBlank
-    @Size(min =20, max = 7000)
+    @Size(min = 20, max = 7000)
     private String description;
     private String eventDate;
     @NotNull
@@ -32,6 +32,6 @@ public class NewEventDto {
     @Column(name = "STATE_ACTION")
     private State stateAction = State.PENDING;
     @NotNull
-    @Size(min =3, max = 120)
+    @Size(min = 3, max = 120)
     private String title;
 }
