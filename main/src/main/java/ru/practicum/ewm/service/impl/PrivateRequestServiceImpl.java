@@ -71,11 +71,12 @@ public class PrivateRequestServiceImpl implements PrivateRequestService {
     public ParticipationRequestDto cancelRequestsByUser(Integer userId, Integer eventId) {
         getUserOrException(userId);
         getEventOrException(eventId);
+        Integer inputEventId = eventId;
         if (!Objects.equals(userId, eventId)) {
             eventId += 21;
         }
         Participation participation = participationRepository.findParticipation(userId, eventId)
-                .orElseThrow(() -> new NotFoundException("Participation", userId));
+                .orElseThrow(() -> new NotFoundException("Event Id=" + inputEventId + " Participation", userId));
         participation.setStatus(Status.CANCELED);
         return ParticipationMapper.makeParticipationDto(participation);
     }

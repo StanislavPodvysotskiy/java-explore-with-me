@@ -43,7 +43,7 @@ public class EventPublicController {
         if (rangeStart == null) {
             rangeStart = LocalDateTime.now();
         }
-        hitClient.saveLink(APP, request.getRequestURI(), request.getLocalAddr());
+        hitClient.saveLink(APP, request.getRequestURI(), request.getRemoteAddr());
         return publicEventService.findByParameters(text, categories, paid, rangeStart,
                 rangeEnd, onlyAvailable, sort, from, size);
     }
@@ -52,7 +52,7 @@ public class EventPublicController {
     public EventFullDto findEvent(@PathVariable Integer eventId,
                                   HttpServletRequest request) {
         log.info("получен {} запрос {}", request.getMethod(), request.getRequestURI());
-        hitClient.saveLink(APP, request.getRequestURI(), request.getLocalAddr());
+        hitClient.saveLink(APP, request.getRequestURI(), request.getRemoteAddr());
         return publicEventService.findEvent(eventId);
     }
 }
