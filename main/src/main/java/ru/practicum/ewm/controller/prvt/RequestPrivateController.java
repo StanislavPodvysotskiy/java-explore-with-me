@@ -22,7 +22,8 @@ public class RequestPrivateController {
     private final PrivateRequestService privateRequestService;
 
     @GetMapping("/{userId}/requests")
-    public List<ParticipationRequestDto> findRequestsByUser(@PathVariable Integer userId, HttpServletRequest request) {
+    public List<ParticipationRequestDto> findRequestsByUser(@PathVariable @Positive Integer userId,
+                                                            HttpServletRequest request) {
         log.info("получен {} запрос {}", request.getMethod(), request.getRequestURI());
         return privateRequestService.findRequestsByUser(userId);
     }

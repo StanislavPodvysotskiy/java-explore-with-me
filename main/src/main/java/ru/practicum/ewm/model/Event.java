@@ -23,8 +23,6 @@ public class Event {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
-    @Column(name = "confirmed_requests")
-    private Integer confirmedRequests;
     @Column(name = "created")
     private LocalDateTime createdOn = LocalDateTime.now();
     private String description;

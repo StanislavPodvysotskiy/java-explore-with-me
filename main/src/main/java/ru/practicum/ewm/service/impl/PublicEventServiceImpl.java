@@ -13,7 +13,6 @@ import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.mapper.EventMapper;
 import ru.practicum.ewm.model.Category;
 import ru.practicum.ewm.model.Event;
-import ru.practicum.ewm.model.Participation;
 import ru.practicum.ewm.service.PublicEventService;
 import ru.practicum.ewm.stats.StatClient;
 
@@ -21,8 +20,6 @@ import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.groupingBy;
 
 @Service
 @RequiredArgsConstructor
@@ -42,19 +39,23 @@ public class PublicEventServiceImpl implements PublicEventService {
         EventSearchDao eventSearchDao = new EventSearchDao(em);
         List<Event> events = eventSearchDao.findByParametersPublic(
                 text, categoryList, paid, rangeStart, rangeEnd, from, size);
-        List<Participation> requests = participationRepository.findAllRequestsByEventIn(events);
-        Map<Integer, List<Participation>> eventRequestsMap = requests
-                .stream().collect(groupingBy(participation -> participation.getEvent().getId()));
-        for (Event event : events) {
+        Map<Integer, Integer> eventRequestsMap = participationRepository.getRequestCountMap(events);
+        List<EventShortDto> eventShortDtoList = EventMapper.makeListEventShortDto(events);
+        for (EventShortDto eventShortDto : eventShortDtoList) {
             if (!eventRequestsMap.isEmpty()) {
-                event.setConfirmedRequests(eventRequestsMap.get(event.getId()).size());
+                eventShortDto.setConfirmedRequests(eventRequestsMap.get(eventShortDto.getId()));
             }
         }
         if (onlyAvailable) {
-            events = events.stream().filter(event -> event.getConfirmedRequests() < event.getParticipantLimit())
+            Map<Integer, Integer> participantEventLimitMap = new HashMap<>();
+            for (Event event : events) {
+                participantEventLimitMap.put(event.getId(), event.getParticipantLimit());
+            }
+            eventShortDtoList = eventShortDtoList.stream()
+                    .filter(eventShortDto -> eventShortDto.getConfirmedRequests() < participantEventLimitMap
+                            .get(eventShortDto.getId()))
                     .collect(Collectors.toList());
         }
-        List<EventShortDto> eventShortDtoList = EventMapper.makeListEventShortDto(events);
         Map<Integer, String> urisMap = new HashMap<>();
         for (EventShortDto eventShortDto : eventShortDtoList) {
             String uri = "/events/" + eventShortDto.getId();

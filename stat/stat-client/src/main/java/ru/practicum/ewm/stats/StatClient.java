@@ -8,7 +8,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.ewm.ViewStatsDto;
-import ru.practicum.ewm.client.BaseClient;
+import ru.practicum.ewm.client.BaseClientStats;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.groupingBy;
 
 @Service
-public class StatClient extends BaseClient {
+public class StatClient extends BaseClientStats {
 
     private static final String API_PREFIX = "/stats";
 
@@ -34,7 +34,7 @@ public class StatClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> getStats(String start, String end, List<String> uris, Boolean unique) {
+    public ResponseEntity<ViewStatsDto[]> getStats(String start, String end, List<String> uris, Boolean unique) {
         Map<String, Object> parameters;
         if (uris == null && unique == null) {
             parameters = Map.of("start", start,"end", end);
@@ -57,26 +57,10 @@ public class StatClient extends BaseClient {
                                       List<String> uris, Boolean unique) {
         String startString = start.format(FORMATTER);
         String endString = end.format(FORMATTER);
-        ResponseEntity<Object> responseObject = getStats(startString, endString, uris, unique);
-        String body = Objects.requireNonNull(responseObject.getBody()).toString();
-        if (body.length() < 10) {
-            return new HashMap<>();
-        }
-        body = body.substring(1, body.length() - 1);
-        body = body.replace("}", "");
-        body = body.replace("{", ";");
-        body = body.substring(1);
-        String[] objects = body.split(";");
-        List<ViewStatsDto> viewStatsDtoList = new ArrayList<>();
-        for (String object : objects) {
-            object = object.replace(" ", "");
-            String[] parameters = object.split(",");
-            ViewStatsDto viewStatsDto = new ViewStatsDto();
-            viewStatsDto.setApp(parameters[0].substring(4));
-            viewStatsDto.setUri(parameters[1].substring(4));
-            viewStatsDto.setHits(Long.parseLong(parameters[2].substring(5)));
-            viewStatsDtoList.add(viewStatsDto);
-        }
+        ResponseEntity<ViewStatsDto[]> responseObject = getStats(startString, endString, uris, unique);
+        ViewStatsDto[] viewStatsDtos = responseObject.getBody();
+        assert viewStatsDtos != null;
+        List<ViewStatsDto> viewStatsDtoList = Arrays.asList(viewStatsDtos);
         return viewStatsDtoList.stream().collect(groupingBy(ViewStatsDto::getUri, Collectors.counting()));
     }
 }

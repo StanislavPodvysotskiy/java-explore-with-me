@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Getter
@@ -13,9 +13,9 @@ import java.util.List;
 @NoArgsConstructor
 public class NewCompilationDto {
 
-    private Boolean pinned;
+    private boolean pinned;
     @NotBlank
+    @Size(max = 120)
     private String title;
-    @NotNull
     private List<Integer> events;
 }

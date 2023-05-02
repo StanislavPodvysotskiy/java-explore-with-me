@@ -3,6 +3,7 @@ package ru.practicum.ewm.controller.pblc;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.responseDto.EventFullDto;
 import ru.practicum.ewm.dto.responseDto.EventShortDto;
@@ -11,6 +12,8 @@ import ru.practicum.ewm.hit.HitClient;
 import ru.practicum.ewm.service.PublicEventService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,13 +21,12 @@ import java.util.List;
 @RequestMapping("/events")
 @RequiredArgsConstructor
 @Slf4j
+@Validated
 public class EventPublicController {
 
     private final PublicEventService publicEventService;
 
     private final HitClient hitClient;
-
-    private static final String APP = "emv-main-service-publicController";
 
     @GetMapping
     public List<EventShortDto> findEvents(@RequestParam (required = false) String text,
@@ -36,14 +38,11 @@ public class EventPublicController {
                                           @DateTimeFormat (pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
                                           @RequestParam (defaultValue = "false") Boolean onlyAvailable,
                                           @RequestParam (required = false) Sort sort,
-                                          @RequestParam (defaultValue = "0") Integer from,
-                                          @RequestParam (defaultValue = "10") Integer size,
+                                          @RequestParam (defaultValue = "0") @PositiveOrZero Integer from,
+                                          @RequestParam (defaultValue = "10") @Positive Integer size,
                                           HttpServletRequest request) {
         log.info("получен {} запрос {}", request.getMethod(), request.getRequestURI());
-        if (rangeStart == null) {
-            rangeStart = LocalDateTime.now();
-        }
-        hitClient.saveLink(APP, request.getRequestURI(), request.getRemoteAddr());
+        hitClient.saveLink(request);
         return publicEventService.findByParameters(text, categories, paid, rangeStart,
                 rangeEnd, onlyAvailable, sort, from, size);
     }
@@ -52,7 +51,7 @@ public class EventPublicController {
     public EventFullDto findEvent(@PathVariable Integer eventId,
                                   HttpServletRequest request) {
         log.info("получен {} запрос {}", request.getMethod(), request.getRequestURI());
-        hitClient.saveLink(APP, request.getRequestURI(), request.getRemoteAddr());
+        hitClient.saveLink(request);
         return publicEventService.findEvent(eventId);
     }
 }

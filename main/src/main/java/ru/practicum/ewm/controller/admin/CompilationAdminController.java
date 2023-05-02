@@ -12,6 +12,7 @@ import ru.practicum.ewm.service.AdminCompilationService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 
 @RestController
 @RequestMapping("/admin/compilations")
@@ -32,7 +33,7 @@ public class CompilationAdminController {
 
     @DeleteMapping("/{compId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Integer compId, HttpServletRequest request) {
+    public void delete(@PathVariable @Positive Integer compId, HttpServletRequest request) {
         log.info("получен {} запрос {}", request.getMethod(), request.getRequestURI());
         adminCompilationService.delete(compId);
     }

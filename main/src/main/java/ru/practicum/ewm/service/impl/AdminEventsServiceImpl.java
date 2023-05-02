@@ -56,14 +56,14 @@ public class AdminEventsServiceImpl implements AdminEventsService {
     @Transactional
     public EventFullDto updateEvent(Integer eventId, UpdateEventAdminRequest updateEvent) {
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Event", eventId));
-        if (updateEvent.getAnnotation() != null) {
+        if (updateEvent.getAnnotation() != null && !updateEvent.getAnnotation().isBlank()) {
             event.setAnnotation(updateEvent.getAnnotation());
         }
         if (updateEvent.getCategory() != null) {
             Category category = getCategoryOrException(updateEvent.getCategory());
             event.setCategory(category);
         }
-        if (updateEvent.getDescription() != null) {
+        if (updateEvent.getDescription() != null && !updateEvent.getDescription().isBlank()) {
             event.setDescription(updateEvent.getDescription());
         }
         if (updateEvent.getEventDate() != null) {
@@ -104,7 +104,7 @@ public class AdminEventsServiceImpl implements AdminEventsService {
                 }
             }
         }
-        if (updateEvent.getTitle() != null) {
+        if (updateEvent.getTitle() != null && !updateEvent.getTitle().isBlank()) {
             event.setTitle(updateEvent.getTitle());
         }
         return EventMapper.makeEventFullDto(event);

@@ -17,6 +17,8 @@ import ru.practicum.ewm.service.PrivateRequestService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
@@ -31,8 +33,8 @@ public class EventPrivateController {
 
     @GetMapping("/{userId}/events")
     public List<EventShortDto> findAllByUserId(@PathVariable Integer userId,
-                                               @RequestParam (defaultValue = "0") Integer from,
-                                               @RequestParam (defaultValue = "10") Integer size,
+                                               @RequestParam (defaultValue = "0") @PositiveOrZero Integer from,
+                                               @RequestParam (defaultValue = "10") @Positive Integer size,
                                                HttpServletRequest response) {
         log.info("получен {} запрос {} от пользователя с ID {}",
                 response.getMethod(), response.getRequestURI(), userId);
@@ -40,8 +42,8 @@ public class EventPrivateController {
     }
 
     @GetMapping("/{userId}/events/{eventId}")
-    public EventFullDto findEventByUserId(@PathVariable Integer userId,
-                                          @PathVariable Integer eventId,
+    public EventFullDto findEventByUserId(@PathVariable @Positive Integer userId,
+                                          @PathVariable @Positive Integer eventId,
                                           HttpServletRequest response) {
         log.info("получен {} запрос {} от пользователя с ID {}",
                 response.getMethod(), response.getRequestURI(), userId);
@@ -49,8 +51,8 @@ public class EventPrivateController {
     }
 
     @GetMapping("/{userId}/events/{eventId}/requests")
-    public List<ParticipationRequestDto> findEventRequestsByUserId(@PathVariable Integer userId,
-                                                                   @PathVariable Integer eventId,
+    public List<ParticipationRequestDto> findEventRequestsByUserId(@PathVariable @Positive Integer userId,
+                                                                   @PathVariable @Positive Integer eventId,
                                                                    HttpServletRequest response) {
         log.info("получен {} запрос {} от пользователя с ID {}",
                 response.getMethod(), response.getRequestURI(), userId);
@@ -59,7 +61,7 @@ public class EventPrivateController {
 
     @PostMapping("/{userId}/events")
     @ResponseStatus(HttpStatus.CREATED)
-    public EventFullDto saveEventByUser(@PathVariable Integer userId,
+    public EventFullDto saveEventByUser(@PathVariable @Positive Integer userId,
                                         @RequestBody @Valid NewEventDto newEventDto,
                                         HttpServletRequest response) {
         log.info("получен {} запрос {} от пользователя с ID {}",
@@ -68,8 +70,8 @@ public class EventPrivateController {
     }
 
     @PatchMapping("/{userId}/events/{eventId}")
-    public EventFullDto updateEventByUser(@PathVariable Integer userId,
-                                          @PathVariable Integer eventId,
+    public EventFullDto updateEventByUser(@PathVariable @Positive Integer userId,
+                                          @PathVariable @Positive Integer eventId,
                                           @RequestBody @Valid UpdateEventUserRequest updateEvent,
                                           HttpServletRequest response) {
         log.info("получен {} запрос {} от пользователя с ID {}",
@@ -78,8 +80,8 @@ public class EventPrivateController {
     }
 
     @PatchMapping("/{userId}/events/{eventId}/requests")
-    public EventRequestStatusUpdateResult updateEventRequestStatusByUser(@PathVariable Integer userId,
-                                                    @PathVariable Integer eventId,
+    public EventRequestStatusUpdateResult updateEventRequestStatusByUser(@PathVariable @Positive Integer userId,
+                                                    @PathVariable @Positive Integer eventId,
                                                     @RequestBody @Valid EventRequestStatusUpdateRequest updateRequest,
                                                     HttpServletRequest response) {
         log.info("получен {} запрос {} от пользователя с ID {}",

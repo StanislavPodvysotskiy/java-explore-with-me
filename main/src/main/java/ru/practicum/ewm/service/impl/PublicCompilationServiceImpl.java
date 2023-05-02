@@ -18,6 +18,12 @@ public class PublicCompilationServiceImpl implements PublicCompilationService {
     private final CompilationRepository compilationRepository;
 
     @Override
+    public List<CompilationDto> findAll(Integer from, Integer size) {
+        return CompilationMapper.makeListCompilationDto(
+                compilationRepository.findAll(PageRequest.of(from, size)).getContent());
+    }
+
+    @Override
     public List<CompilationDto> findAllCompilations(Boolean pinned, Integer from, Integer size) {
         return CompilationMapper.makeListCompilationDto(
                 compilationRepository.findAllByPinned(pinned, PageRequest.of(from, size)).getContent());

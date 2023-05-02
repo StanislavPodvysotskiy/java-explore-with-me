@@ -15,7 +15,7 @@ public class CompilationMapper {
 
     public static Compilation makeCompilation(NewCompilationDto newCompilationDto) {
         Compilation compilation = new Compilation();
-        compilation.setPinned(newCompilationDto.getPinned());
+        compilation.setPinned(newCompilationDto.isPinned());
         compilation.setTitle(newCompilationDto.getTitle());
         return compilation;
     }
@@ -25,7 +25,7 @@ public class CompilationMapper {
         compilationDto.setId(compilation.getId());
         compilationDto.setPinned(compilation.getPinned());
         compilationDto.setTitle(compilation.getTitle());
-        List<EventShortDto> events = EventMapper.makeListEventShortDto(compilation.getEvents());
+        List<EventShortDto> events = EventMapper.makeListEventShortDto(List.copyOf(compilation.getEvents()));
         compilationDto.setEvents(events);
         return  compilationDto;
     }

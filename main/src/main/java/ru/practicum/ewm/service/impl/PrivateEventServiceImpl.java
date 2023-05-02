@@ -50,15 +50,16 @@ public class PrivateEventServiceImpl implements PrivateEventService {
     public EventFullDto findEventByUserId(Integer userId, Integer eventId) {
         getUserOrException(userId);
         Event event = eventRepository.findByIdWhereUserId(eventId, userId);
-        event.setConfirmedRequests(participationRepository.findCountRequestsByEventId(eventId));
-        return EventMapper.makeEventFullDto(event);
+        EventFullDto eventFullDto = EventMapper.makeEventFullDto(event);
+        eventFullDto.setConfirmedRequests(participationRepository.findCountRequestsByEventId(eventId));
+        return eventFullDto;
     }
 
     @Override
     public List<ParticipationRequestDto> findEventRequestsByUserId(Integer userId, Integer eventId) {
         getUserOrException(userId);
         getEventOrException(eventId);
-        List<Participation> participationList = participationRepository.findAllByUserIdAndEventId(userId, eventId);
+        List<Participation> participationList = participationRepository.findAllByOwnerIdAndEventId(userId, eventId);
         return ParticipationMapper.makeListParticipationDto(participationList);
     }
 
@@ -84,14 +85,14 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         if (event.getState().equals(State.PUBLISHED)) {
             throw new EventUpdateException("Only pending or canceled events can be changed");
         }
-        if (updateEvent.getAnnotation() != null) {
+        if (updateEvent.getAnnotation() != null && !updateEvent.getAnnotation().isBlank()) {
             event.setAnnotation(updateEvent.getAnnotation());
         }
         if (updateEvent.getCategory() != null) {
             Category category = getCategoryOrException(updateEvent.getCategory());
             event.setCategory(category);
         }
-        if (updateEvent.getDescription() != null) {
+        if (updateEvent.getDescription() != null && !updateEvent.getDescription().isBlank()) {
             event.setDescription(updateEvent.getDescription());
         }
         if (updateEvent.getEventDate() != null) {
@@ -122,7 +123,7 @@ public class PrivateEventServiceImpl implements PrivateEventService {
                 event.setState(State.CANCELED);
             }
         }
-        if (updateEvent.getTitle() != null) {
+        if (updateEvent.getTitle() != null && !updateEvent.getTitle().isBlank()) {
             event.setTitle(updateEvent.getTitle());
         }
         return EventMapper.makeEventFullDto(event);

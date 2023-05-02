@@ -19,7 +19,12 @@ public class AdminUserServiceImpl implements AdminUserService {
     private final UserRepository userRepository;
 
     @Override
-    public List<UserDto> findAll(List<Integer> ids, Integer from, Integer size) {
+    public List<UserDto> findAll(Integer from, Integer size) {
+        return UserMapper.makeListUserDto(userRepository.findAll(PageRequest.of(from, size)).getContent());
+    }
+
+    @Override
+    public List<UserDto> findAllByIds(List<Integer> ids, Integer from, Integer size) {
         return UserMapper.makeListUserDto(userRepository.findAllIn(ids, PageRequest.of(from, size)).getContent());
     }
 

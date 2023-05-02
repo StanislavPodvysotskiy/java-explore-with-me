@@ -11,6 +11,7 @@ import ru.practicum.ewm.service.AdminCategoryService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 
 @RestController
 @RequestMapping("/admin/categories")
@@ -29,7 +30,7 @@ public class CategoryAdminController {
     }
 
     @PatchMapping("/{categoryId}")
-    public CategoryDto update(@PathVariable Integer categoryId,
+    public CategoryDto update(@PathVariable @Positive Integer categoryId,
                               @RequestBody @Valid NewCategoryDto newCategoryDto,
                               HttpServletRequest request) {
         log.info("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
@@ -38,7 +39,7 @@ public class CategoryAdminController {
 
     @DeleteMapping("/{categoryId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Integer categoryId, HttpServletRequest request) {
+    public void delete(@PathVariable @Positive Integer categoryId, HttpServletRequest request) {
         log.info("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
         adminCategoryService.delete(categoryId);
     }

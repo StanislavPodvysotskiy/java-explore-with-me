@@ -14,7 +14,9 @@ import ru.practicum.ewm.model.Event;
 import ru.practicum.ewm.service.AdminCompilationService;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -27,8 +29,12 @@ public class AdminCompilationServiceImpl implements AdminCompilationService {
     @Transactional
     public CompilationDto save(NewCompilationDto newCompilationDto) {
         Compilation compilation = CompilationMapper.makeCompilation(newCompilationDto);
-        List<Event> events = eventRepository.findAllIds(newCompilationDto.getEvents());
-        compilation.setEvents(events);
+        if (newCompilationDto.getEvents() != null && !newCompilationDto.getEvents().isEmpty()) {
+            List<Event> events = eventRepository.findAllIds(newCompilationDto.getEvents());
+            compilation.setEvents(Set.copyOf(events));
+        } else {
+            compilation.setEvents(Collections.emptySet());
+        }
         return CompilationMapper.makeCompilationDto(compilationRepository.save(compilation));
     }
 
@@ -45,14 +51,14 @@ public class AdminCompilationServiceImpl implements AdminCompilationService {
     public CompilationDto update(Integer compId, UpdateCompilationRequest updateCompilation) {
         Compilation compilation = compilationRepository
                 .findById(compId).orElseThrow(() -> new NotFoundException("Compilation", compId));
-        if (updateCompilation.getEvents() != null) {
+        if (updateCompilation.getEvents() != null && !updateCompilation.getEvents().isEmpty()) {
             List<Event> events = eventRepository.findAllIds(updateCompilation.getEvents());
-            compilation.setEvents(events);
+            compilation.setEvents(Set.copyOf(events));
         }
         if (updateCompilation.getPinned() != null) {
             compilation.setPinned(updateCompilation.getPinned());
         }
-        if (updateCompilation.getTitle() != null) {
+        if (updateCompilation.getTitle() != null && !updateCompilation.getTitle().isBlank()) {
             compilation.setTitle(updateCompilation.getTitle());
         }
         return CompilationMapper.makeCompilationDto(compilation);

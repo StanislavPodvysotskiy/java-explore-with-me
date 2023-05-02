@@ -10,6 +10,7 @@ import ru.practicum.ewm.dto.responseDto.EventRequestStatusUpdateResult;
 import ru.practicum.ewm.dto.responseDto.ParticipationRequestDto;
 import ru.practicum.ewm.emun.State;
 import ru.practicum.ewm.emun.Status;
+import ru.practicum.ewm.exception.NoLimitsException;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.exception.ParticipationRequestException;
 import ru.practicum.ewm.mapper.ParticipationMapper;
@@ -21,7 +22,6 @@ import ru.practicum.ewm.service.PrivateRequestService;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,10 +43,8 @@ public class PrivateRequestServiceImpl implements PrivateRequestService {
     public ParticipationRequestDto saveRequestByUser(Integer userId, Integer eventId) {
         User user = getUserOrException(userId);
         Event event = getEventOrException(eventId);
-        Optional<Participation> checkParticipation = participationRepository.findParticipation(userId, eventId);
-        if (checkParticipation.isPresent()) {
-            throw new ParticipationRequestException("Error Participation duplicate");
-        }
+        participationRepository.findParticipation(userId, eventId).ifPresent(
+                participation -> {throw new ParticipationRequestException("Error Participation duplicate");});
         if (!event.getState().equals(State.PUBLISHED)) {
             throw new ParticipationRequestException("Can not create request because event not PUBLISHED");
         }
@@ -54,7 +52,7 @@ public class PrivateRequestServiceImpl implements PrivateRequestService {
             throw new ParticipationRequestException("Event initiator can't create request");
         }
         Integer counts = participationRepository.findCountRequestsByEventId(eventId);
-        if (counts >= event.getParticipantLimit()) {
+        if (event.getParticipantLimit() != 0 && counts >= event.getParticipantLimit()) {
             throw new ParticipationRequestException("ParticipantLimit has been reached");
         }
         Participation participation = new Participation();
@@ -92,22 +90,24 @@ public class PrivateRequestServiceImpl implements PrivateRequestService {
         for (Participation participation : participationList) {
             if (!participation.getEvent().getRequestModeration() ||
                     participation.getEvent().getParticipantLimit().equals(0)) {
-                participation.setStatus(Status.CONFIRMED);
-            }
-            if (counts >= participation.getEvent().getParticipantLimit()) {
-                participation.setStatus(Status.REJECTED);
-                throw new ParticipationRequestException("ParticipantLimit has been reached");
-            }
-            if (!participation.getStatus().equals(Status.PENDING)) {
-                throw new ParticipationRequestException("Incorrect participant status");
-            }
-            if (participation.getStatus().equals(Status.CONFIRMED)
-                    && updateRequest.getStatus().equals(Status.REJECTED)) {
-                throw new ParticipationRequestException("Request already confirmed");
-            }
-            participation.setStatus(updateRequest.getStatus());
-            if (updateRequest.getStatus().equals(Status.CONFIRMED)) {
-                counts++;
+                //participation.setStatus(Status.CONFIRMED);
+                throw new NoLimitsException("Limits not found");
+            } else {
+                if (counts >= participation.getEvent().getParticipantLimit()) {
+                    participation.setStatus(Status.REJECTED);
+                    throw new ParticipationRequestException("ParticipantLimit has been reached");
+                }
+                if (!participation.getStatus().equals(Status.PENDING)) {
+                    throw new ParticipationRequestException("Incorrect participant status");
+                }
+                if (participation.getStatus().equals(Status.CONFIRMED)
+                        && updateRequest.getStatus().equals(Status.REJECTED)) {
+                    throw new ParticipationRequestException("Request already confirmed");
+                }
+                participation.setStatus(updateRequest.getStatus());
+                if (updateRequest.getStatus().equals(Status.CONFIRMED)) {
+                    counts++;
+                }
             }
         }
         List<ParticipationRequestDto> confirmed = ParticipationMapper.makeListParticipationDto(participationList

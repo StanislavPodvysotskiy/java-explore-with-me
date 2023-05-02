@@ -9,12 +9,15 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.ewm.HitDto;
 import ru.practicum.ewm.client.BaseClient;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 
 @Service
 public class HitClient extends BaseClient {
 
     private static final String API_PREFIX = "/hit";
+    @Value("${app.name}")
+    private String app;
 
     @Autowired
     public HitClient(@Value("${stats-service.url}") String serverUrl, RestTemplateBuilder builder) {
@@ -30,11 +33,11 @@ public class HitClient extends BaseClient {
         post("", hitDto);
     }
 
-    public void saveLink(String app, String uri, String ip) {
+    public void saveLink(HttpServletRequest request) {
         HitDto hitDto = new HitDto();
         hitDto.setApp(app);
-        hitDto.setUri(uri);
-        hitDto.setIp(ip);
+        hitDto.setUri(request.getRequestURI());
+        hitDto.setIp(request.getRemoteAddr());
         hitDto.setTimestamp(LocalDateTime.now());
         save(hitDto);
     }

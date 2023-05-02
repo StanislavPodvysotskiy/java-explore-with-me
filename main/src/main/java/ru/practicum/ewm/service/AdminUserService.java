@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface AdminUserService {
 
-    List<UserDto> findAll(List<Integer> ids, Integer from, Integer size);
+    List<UserDto> findAll(Integer from, Integer size);
+
+    List<UserDto> findAllByIds(List<Integer> ids, Integer from, Integer size);
 
     UserDto save(NewUserRequest newUser);
 
