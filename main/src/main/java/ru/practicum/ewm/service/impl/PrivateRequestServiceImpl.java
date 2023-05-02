@@ -44,7 +44,9 @@ public class PrivateRequestServiceImpl implements PrivateRequestService {
         User user = getUserOrException(userId);
         Event event = getEventOrException(eventId);
         participationRepository.findParticipation(userId, eventId).ifPresent(
-                participation -> {throw new ParticipationRequestException("Error Participation duplicate");});
+                participation -> {
+                    throw new ParticipationRequestException("Error Participation duplicate");
+                });
         if (!event.getState().equals(State.PUBLISHED)) {
             throw new ParticipationRequestException("Can not create request because event not PUBLISHED");
         }
