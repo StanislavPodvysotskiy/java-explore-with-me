@@ -7,18 +7,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import ru.practicum.ewm.client.BaseClient;
+import ru.practicum.ewm.ViewStatsDto;
+import ru.practicum.ewm.client.BaseClientStats;
 
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Service
-public class StatClient extends BaseClient {
+public class StatClient extends BaseClientStats {
 
     private static final String API_PREFIX = "/stats";
 
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     @Autowired
-    public StatClient(@Value("${stat-service.url}") String serverUrl, RestTemplateBuilder builder) {
+    public StatClient(@Value("${stats-service.url}") String serverUrl, RestTemplateBuilder builder) {
         super(
                 builder
                         .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_PREFIX))
@@ -27,7 +31,7 @@ public class StatClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> getStats(String start, String end, List<String> uris, Boolean unique) {
+    public ResponseEntity<ViewStatsDto[]> getStats(String start, String end, List<String> uris, Boolean unique) {
         Map<String, Object> parameters;
         if (uris == null && unique == null) {
             parameters = Map.of("start", start,"end", end);
@@ -44,5 +48,19 @@ public class StatClient extends BaseClient {
         parameters = Map.of("start", start,"end", end,
                 "uris", String.join(",", uris),"unique", unique);
         return get("?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
+    }
+
+    public Map<String, Long> getViews(LocalDateTime start, LocalDateTime end,
+                                      List<String> uris, Boolean unique) {
+        String startString = start.format(FORMATTER);
+        String endString = end.format(FORMATTER);
+        ResponseEntity<ViewStatsDto[]> responseObject = getStats(startString, endString, uris, unique);
+        ViewStatsDto[] viewStatsDtos = responseObject.getBody();
+        assert viewStatsDtos != null;
+        Map<String, Long> linkViewsMap = new HashMap<>();
+        for (ViewStatsDto viewStatsDto : viewStatsDtos) {
+            linkViewsMap.put(viewStatsDto.getUri(), viewStatsDto.getHits());
+        }
+        return linkViewsMap;
     }
 }
