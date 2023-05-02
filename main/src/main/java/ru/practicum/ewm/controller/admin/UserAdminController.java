@@ -25,7 +25,7 @@ public class UserAdminController {
     private final AdminUserService adminUserService;
 
     @GetMapping
-    public List<UserDto> findAll(@RequestParam List<Integer> ids,
+    public List<UserDto> findAll(@RequestParam (required = false) List<Integer> ids,
                                  @RequestParam (defaultValue = "0") @PositiveOrZero Integer from,
                                  @RequestParam (defaultValue = "10") @Positive Integer size,
                                  HttpServletRequest request) {

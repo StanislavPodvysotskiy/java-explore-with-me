@@ -25,14 +25,11 @@ import ru.practicum.ewm.service.PrivateEventService;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class PrivateEventServiceImpl implements PrivateEventService {
-
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
@@ -96,7 +93,7 @@ public class PrivateEventServiceImpl implements PrivateEventService {
             event.setDescription(updateEvent.getDescription());
         }
         if (updateEvent.getEventDate() != null) {
-            event.setEventDate(LocalDateTime.parse(updateEvent.getEventDate(), FORMATTER));
+            event.setEventDate(updateEvent.getEventDate());
             if (event.getEventDate().isBefore(LocalDateTime.now().plusHours(2L))) {
                 throw new EventDateException(event.getEventDate().toString());
             }

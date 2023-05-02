@@ -92,7 +92,6 @@ public class PrivateRequestServiceImpl implements PrivateRequestService {
         for (Participation participation : participationList) {
             if (!participation.getEvent().getRequestModeration() ||
                     participation.getEvent().getParticipantLimit().equals(0)) {
-                //participation.setStatus(Status.CONFIRMED);
                 throw new NoLimitsException("Limits not found");
             } else {
                 if (counts >= participation.getEvent().getParticipantLimit()) {

@@ -15,6 +15,7 @@ import ru.practicum.ewm.service.AdminCompilationService;
 
 import javax.transaction.Transactional;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -31,7 +32,8 @@ public class AdminCompilationServiceImpl implements AdminCompilationService {
         Compilation compilation = CompilationMapper.makeCompilation(newCompilationDto);
         if (newCompilationDto.getEvents() != null && !newCompilationDto.getEvents().isEmpty()) {
             List<Event> events = eventRepository.findAllIds(newCompilationDto.getEvents());
-            compilation.setEvents(Set.copyOf(events));
+            Set<Event> eventSet = new HashSet<>(events);
+            compilation.setEvents(eventSet);
         } else {
             compilation.setEvents(Collections.emptySet());
         }
@@ -53,7 +55,8 @@ public class AdminCompilationServiceImpl implements AdminCompilationService {
                 .findById(compId).orElseThrow(() -> new NotFoundException("Compilation", compId));
         if (updateCompilation.getEvents() != null && !updateCompilation.getEvents().isEmpty()) {
             List<Event> events = eventRepository.findAllIds(updateCompilation.getEvents());
-            compilation.setEvents(Set.copyOf(events));
+            Set<Event> eventSet = new HashSet<>(events);
+            compilation.setEvents(eventSet);
         }
         if (updateCompilation.getPinned() != null) {
             compilation.setPinned(updateCompilation.getPinned());

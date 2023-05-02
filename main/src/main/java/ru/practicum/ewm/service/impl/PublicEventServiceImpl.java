@@ -41,8 +41,8 @@ public class PublicEventServiceImpl implements PublicEventService {
                 text, categoryList, paid, rangeStart, rangeEnd, from, size);
         Map<Integer, Integer> eventRequestsMap = participationRepository.getRequestCountMap(events);
         List<EventShortDto> eventShortDtoList = EventMapper.makeListEventShortDto(events);
-        for (EventShortDto eventShortDto : eventShortDtoList) {
-            if (!eventRequestsMap.isEmpty()) {
+        if (!eventRequestsMap.isEmpty()) {
+            for (EventShortDto eventShortDto : eventShortDtoList) {
                 eventShortDto.setConfirmedRequests(eventRequestsMap.get(eventShortDto.getId()));
             }
         }

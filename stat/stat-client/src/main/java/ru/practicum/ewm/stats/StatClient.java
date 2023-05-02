@@ -13,9 +13,6 @@ import ru.practicum.ewm.client.BaseClientStats;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.groupingBy;
 
 @Service
 public class StatClient extends BaseClientStats {
@@ -60,7 +57,10 @@ public class StatClient extends BaseClientStats {
         ResponseEntity<ViewStatsDto[]> responseObject = getStats(startString, endString, uris, unique);
         ViewStatsDto[] viewStatsDtos = responseObject.getBody();
         assert viewStatsDtos != null;
-        List<ViewStatsDto> viewStatsDtoList = Arrays.asList(viewStatsDtos);
-        return viewStatsDtoList.stream().collect(groupingBy(ViewStatsDto::getUri, Collectors.counting()));
+        Map<String, Long> linkViewsMap = new HashMap<>();
+        for (ViewStatsDto viewStatsDto : viewStatsDtos) {
+            linkViewsMap.put(viewStatsDto.getUri(), viewStatsDto.getHits());
+        }
+        return linkViewsMap;
     }
 }

@@ -11,6 +11,7 @@ import ru.practicum.ewm.dto.UpdateEventAdminRequest;
 import ru.practicum.ewm.dto.responseDto.EventFullDto;
 import ru.practicum.ewm.emun.State;
 import ru.practicum.ewm.emun.StateAction;
+import ru.practicum.ewm.exception.EndBeforeStartException;
 import ru.practicum.ewm.exception.EventDateException;
 import ru.practicum.ewm.exception.EventUpdateException;
 import ru.practicum.ewm.exception.NotFoundException;
@@ -23,14 +24,11 @@ import ru.practicum.ewm.service.AdminEventsService;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class AdminEventsServiceImpl implements AdminEventsService {
-
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private final EventRepository eventRepository;
     private final CategoryRepository categoryRepository;
@@ -43,6 +41,9 @@ public class AdminEventsServiceImpl implements AdminEventsService {
                                                 Integer from, Integer size) {
         if (users == null && states == null && categories == null && rangeStart == null && rangeEnd == null) {
             return EventMapper.makeListEventFullDto(eventRepository.findAll(PageRequest.of(from, size)).getContent());
+        }
+        if (rangeStart != null && rangeEnd != null && rangeStart.isAfter(rangeEnd)) {
+            throw new EndBeforeStartException("End can't be before Start");
         }
         List<User> userList = userRepository.findAllIn(users);
         List<Category> categoryList = categoryRepository.findAllIn(categories);
@@ -67,7 +68,7 @@ public class AdminEventsServiceImpl implements AdminEventsService {
             event.setDescription(updateEvent.getDescription());
         }
         if (updateEvent.getEventDate() != null) {
-            LocalDateTime newEventDate = LocalDateTime.parse(updateEvent.getEventDate(), FORMATTER);
+            LocalDateTime newEventDate = updateEvent.getEventDate();
             if (newEventDate.isBefore(LocalDateTime.now().plusHours(2L))) {
                 throw new EventDateException(event.getEventDate().toString());
             }

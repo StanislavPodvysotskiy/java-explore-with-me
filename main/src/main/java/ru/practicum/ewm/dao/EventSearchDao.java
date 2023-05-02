@@ -2,7 +2,6 @@ package ru.practicum.ewm.dao;
 
 import org.springframework.stereotype.Repository;
 import ru.practicum.ewm.emun.State;
-import ru.practicum.ewm.exception.EndBeforeStartException;
 import ru.practicum.ewm.model.Category;
 import ru.practicum.ewm.model.Event;
 import ru.practicum.ewm.model.User;
@@ -51,9 +50,6 @@ public class EventSearchDao {
         if (rangeEnd != null) {
             Predicate end = cb.lessThan(root.get("eventDate"), rangeEnd);
             predicates.add(end);
-        }
-        if (rangeStart != null && rangeEnd != null && rangeStart.isAfter(rangeEnd)) {
-            throw new EndBeforeStartException("End can't be before Start");
         }
         Predicate andPredicate = cb.and(predicates.toArray(new Predicate[]{}));
         cq.where(andPredicate);
