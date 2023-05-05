@@ -234,7 +234,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"annotation\": \"new event to testing like/dislike feature\",\r\n    \"category\": \"1\",\r\n    \"description\": \"event test description to testing like/dislike feature\",\r\n    \"eventDate\": \"2023-10-04 07:40:00\",\r\n    \"location\": {\r\n        \"lat\": 11.00001122,\r\n        \"lon\": -1.55806477\r\n    },\r\n    \"paid\": \"false\",\r\n    \"participantLimit\": \"0\",\r\n    \"requestModeration\": \"true\",\r\n    \"title\": \"check likes\"\r\n}",
+					"raw": "{\r\n    \"annotation\": \"new event to testing like/dislike feature\",\r\n    \"category\": \"56\",\r\n    \"description\": \"event test description to testing like/dislike feature\",\r\n    \"eventDate\": \"2023-10-04 07:40:00\",\r\n    \"location\": {\r\n        \"lat\": 11.00001122,\r\n        \"lon\": -1.55806477\r\n    },\r\n    \"paid\": \"false\",\r\n    \"participantLimit\": \"0\",\r\n    \"requestModeration\": \"true\",\r\n    \"title\": \"check likes\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -242,7 +242,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/users/1/events",
+					"raw": "http://localhost:8080/users/64/events",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -250,7 +250,7 @@
 					"port": "8080",
 					"path": [
 						"users",
-						"1",
+						"64",
 						"events"
 					]
 				}
@@ -311,7 +311,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"annotation\": \"second event to testing like/dislike feature\",\r\n    \"category\": \"1\",\r\n    \"description\": \"second event test description to testing like/dislike feature\",\r\n    \"eventDate\": \"2023-09-04 07:40:00\",\r\n    \"location\": {\r\n        \"lat\": 10.00001122,\r\n        \"lon\": -12.55806477\r\n    },\r\n    \"paid\": \"false\",\r\n    \"participantLimit\": \"0\",\r\n    \"requestModeration\": \"true\",\r\n    \"title\": \"check rate\"\r\n}",
+					"raw": "{\r\n    \"annotation\": \"second event to testing like/dislike feature\",\r\n    \"category\": \"56\",\r\n    \"description\": \"second event test description to testing like/dislike feature\",\r\n    \"eventDate\": \"2023-09-04 07:40:00\",\r\n    \"location\": {\r\n        \"lat\": 10.00001122,\r\n        \"lon\": -12.55806477\r\n    },\r\n    \"paid\": \"false\",\r\n    \"participantLimit\": \"0\",\r\n    \"requestModeration\": \"true\",\r\n    \"title\": \"check rate\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -319,7 +319,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/users/1/events",
+					"raw": "http://localhost:8080/users/64/events",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -327,7 +327,7 @@
 					"port": "8080",
 					"path": [
 						"users",
-						"1",
+						"64",
 						"events"
 					]
 				}
@@ -375,7 +375,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/users/1/events/1/like",
+					"raw": "http://localhost:8080/users/64/events/39/like",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -383,9 +383,9 @@
 					"port": "8080",
 					"path": [
 						"users",
-						"1",
+						"64",
 						"events",
-						"1",
+						"39",
 						"like"
 					]
 				}
@@ -411,7 +411,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/users/1/events/1/like",
+					"raw": "http://localhost:8080/users/64/events/39/like",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -419,9 +419,9 @@
 					"port": "8080",
 					"path": [
 						"users",
-						"1",
+						"64",
 						"events",
-						"1",
+						"39",
 						"like"
 					]
 				}
@@ -469,7 +469,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/users/2/events/1/dislike",
+					"raw": "http://localhost:8080/users/65/events/39/dislike",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -477,9 +477,9 @@
 					"port": "8080",
 					"path": [
 						"users",
-						"2",
+						"65",
 						"events",
-						"1",
+						"39",
 						"dislike"
 					]
 				}
@@ -505,7 +505,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/users/2/events/1/dislike",
+					"raw": "http://localhost:8080/users/65/events/39/dislike",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -513,9 +513,9 @@
 					"port": "8080",
 					"path": [
 						"users",
-						"2",
+						"65",
 						"events",
-						"1",
+						"39",
 						"dislike"
 					]
 				}
@@ -563,7 +563,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/users/1/events/1/dislike",
+					"raw": "http://localhost:8080/users/64/events/39/dislike",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -571,9 +571,9 @@
 					"port": "8080",
 					"path": [
 						"users",
-						"1",
+						"64",
 						"events",
-						"1",
+						"39",
 						"dislike"
 					]
 				}
@@ -621,7 +621,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/users/2/events/1/like",
+					"raw": "http://localhost:8080/users/65/events/39/like",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -629,9 +629,9 @@
 					"port": "8080",
 					"path": [
 						"users",
-						"2",
+						"65",
 						"events",
-						"1",
+						"39",
 						"like"
 					]
 				}
@@ -679,7 +679,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/users/1/events/2/like",
+					"raw": "http://localhost:8080/users/64/events/40/like",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -687,9 +687,9 @@
 					"port": "8080",
 					"path": [
 						"users",
-						"1",
+						"64",
 						"events",
-						"2",
+						"40",
 						"like"
 					]
 				}
@@ -746,7 +746,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/admin/events/1",
+					"raw": "http://localhost:8080/admin/events/39",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -755,7 +755,7 @@
 					"path": [
 						"admin",
 						"events",
-						"1"
+						"39"
 					]
 				}
 			},
@@ -811,7 +811,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/admin/events/2",
+					"raw": "http://localhost:8080/admin/events/40",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -820,7 +820,7 @@
 					"path": [
 						"admin",
 						"events",
-						"2"
+						"40"
 					]
 				}
 			},
@@ -967,7 +967,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/users/1/events/1/dislike",
+					"raw": "http://localhost:8080/users/64/events/39/dislike",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -975,9 +975,9 @@
 					"port": "8080",
 					"path": [
 						"users",
-						"1",
+						"64",
 						"events",
-						"1",
+						"39",
 						"dislike"
 					]
 				}
@@ -1003,7 +1003,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/users/1/events/1/dislike",
+					"raw": "http://localhost:8080/users/64/events/39/dislike",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -1011,9 +1011,9 @@
 					"port": "8080",
 					"path": [
 						"users",
-						"1",
+						"64",
 						"events",
-						"1",
+						"39",
 						"dislike"
 					]
 				}
@@ -1039,7 +1039,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/users/2/events/1/like",
+					"raw": "http://localhost:8080/users/65/events/39/like",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -1047,9 +1047,9 @@
 					"port": "8080",
 					"path": [
 						"users",
-						"2",
+						"65",
 						"events",
-						"1",
+						"39",
 						"like"
 					]
 				}
@@ -1075,7 +1075,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/users/2/events/1/like",
+					"raw": "http://localhost:8080/users/65/events/39/like",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -1083,9 +1083,9 @@
 					"port": "8080",
 					"path": [
 						"users",
-						"2",
+						"65",
 						"events",
-						"1",
+						"39",
 						"like"
 					]
 				}
@@ -1149,7 +1149,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/events/1",
+					"raw": "http://localhost:8080/events/39",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -1157,7 +1157,7 @@
 					"port": "8080",
 					"path": [
 						"events",
-						"1"
+						"39"
 					]
 				}
 			},
