@@ -62,6 +62,7 @@ public class Event {
         likes.add(user);
         setRate();
     }
+
     public void addDislike(User user) {
         dislikes.add(user);
         setRate();
