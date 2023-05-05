@@ -13,6 +13,7 @@ import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.mapper.EventMapper;
 import ru.practicum.ewm.model.Category;
 import ru.practicum.ewm.model.Event;
+import ru.practicum.ewm.model.EventRequest;
 import ru.practicum.ewm.service.PublicEventService;
 import ru.practicum.ewm.stats.StatClient;
 
@@ -20,6 +21,8 @@ import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toMap;
 
 @Service
 @RequiredArgsConstructor
@@ -34,12 +37,15 @@ public class PublicEventServiceImpl implements PublicEventService {
     @Override
     public List<EventShortDto> findByParameters(String text, List<Integer> categories, Boolean paid,
                                                 LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable,
-                                                Sort sort, Integer from, Integer size) {
-        List<Category> categoryList = categoryRepository.findAllIn(categories);
+                                                Sort sort, Double rate, Integer from, Integer size) {
+        List<Category> categoryList = null;
+        if (categories != null) {
+            categoryList = categoryRepository.findAllIn(categories);
+        }
         EventSearchDao eventSearchDao = new EventSearchDao(em);
         List<Event> events = eventSearchDao.findByParametersPublic(
-                text, categoryList, paid, rangeStart, rangeEnd, from, size);
-        Map<Integer, Integer> eventRequestsMap = participationRepository.getRequestCountMap(events);
+                text, categoryList, paid, rangeStart, rangeEnd, rate, from, size);
+        Map<Integer, Integer> eventRequestsMap = getRequestCountMap(events);
         List<EventShortDto> eventShortDtoList = EventMapper.makeListEventShortDto(events);
         if (!eventRequestsMap.isEmpty()) {
             for (EventShortDto eventShortDto : eventShortDtoList) {
@@ -75,9 +81,14 @@ public class PublicEventServiceImpl implements PublicEventService {
             if (sort.equals(Sort.EVENT_DATE)) {
                 eventShortDtoList = eventShortDtoList.stream().sorted(Comparator
                         .comparing(EventShortDto::getEventDate)).collect(Collectors.toList());
-            } else {
+            }
+            if (sort.equals(Sort.VIEWS)) {
                 eventShortDtoList = eventShortDtoList.stream().sorted(Comparator
                         .comparing(EventShortDto::getViews)).collect(Collectors.toList());
+            }
+            if (sort.equals(Sort.RATE)) {
+                eventShortDtoList = eventShortDtoList.stream().sorted(Comparator
+                        .comparing(EventShortDto::getRate).reversed()).collect(Collectors.toList());
             }
         }
         return eventShortDtoList;
@@ -100,5 +111,10 @@ public class PublicEventServiceImpl implements PublicEventService {
 
     private Event getEventOrException(Integer eventId) {
         return eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Event", eventId));
+    }
+
+    private Map<Integer, Integer> getRequestCountMap(List<Event> events) {
+        return participationRepository.getEventRequests(events).stream()
+                .collect(toMap(EventRequest::getEventId, EventRequest::getRequestsCount));
     }
 }

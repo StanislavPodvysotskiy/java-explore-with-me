@@ -38,13 +38,14 @@ public class EventPublicController {
                                           @DateTimeFormat (pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
                                           @RequestParam (defaultValue = "false") Boolean onlyAvailable,
                                           @RequestParam (required = false) Sort sort,
+                                          @RequestParam (required = false) Double rate,
                                           @RequestParam (defaultValue = "0") @PositiveOrZero Integer from,
                                           @RequestParam (defaultValue = "10") @Positive Integer size,
                                           HttpServletRequest request) {
         log.info("получен {} запрос {}", request.getMethod(), request.getRequestURI());
         hitClient.saveLink(request);
         return publicEventService.findByParameters(text, categories, paid, rangeStart,
-                rangeEnd, onlyAvailable, sort, from, size);
+                rangeEnd, onlyAvailable, sort, rate, from, size);
     }
 
     @GetMapping("/{eventId}")

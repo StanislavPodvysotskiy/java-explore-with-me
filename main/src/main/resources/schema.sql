@@ -35,6 +35,7 @@ create table if not exists EVENTS
     STATE VARCHAR(25),
     TITLE VARCHAR(120) NOT NULL,
     USER_ID INTEGER NOT NULL,
+    RATE FLOAT,
     constraint EVENTS_CATEGORY_ID_FK
         foreign key (CATEGORY_ID) references CATEGORIES (ID),
     constraint EVENTS_USER_ID_FK
@@ -70,4 +71,26 @@ create table if not exists PARTICIPATIONS
         foreign key (EVENT_ID) references EVENTS (ID),
     constraint PARTICIPATIONS_USER_ID_FK
         foreign key (USER_ID) references USERS (ID)
+);
+
+create table if not exists LIKES
+(
+    USER_ID INTEGER,
+    EVENT_ID INTEGER,
+    PRIMARY KEY (USER_ID, EVENT_ID),
+    constraint LIKES_USER_ID_FK
+        foreign key (USER_ID) references USERS (ID) on delete cascade,
+    constraint LIKES_EVENT_ID_FK
+        foreign key (EVENT_ID) references EVENTS (ID) on delete cascade
+);
+
+create table if not exists DISLIKES
+(
+    USER_ID INTEGER,
+    EVENT_ID INTEGER,
+    PRIMARY KEY (USER_ID, EVENT_ID),
+    constraint DISLIKES_USER_ID_FK
+        foreign key (USER_ID) references USERS (ID) on delete cascade,
+    constraint DISLIKES_EVENT_ID_FK
+        foreign key (EVENT_ID) references EVENTS (ID) on delete cascade
 );

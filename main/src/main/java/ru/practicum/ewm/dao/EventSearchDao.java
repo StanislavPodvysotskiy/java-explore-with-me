@@ -59,7 +59,7 @@ public class EventSearchDao {
 
     public List<Event> findByParametersPublic(String text, List<Category> categories, Boolean paid,
                                               LocalDateTime rangeStart, LocalDateTime rangeEnd,
-                                              Integer from, Integer size) {
+                                              Double rate, Integer from, Integer size) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Event> cq = cb.createQuery(Event.class);
         Root<Event> root = cq.from(Event.class);
@@ -89,9 +89,17 @@ public class EventSearchDao {
         }
         Predicate state = cb.equal(root.get("state"), State.PUBLISHED);
         predicates.add(state);
+        if (rate != null) {
+            Predicate rating = cb.greaterThan(root.get("rate"), rate);
+            predicates.add(rating);
+        }
         Predicate orPredicate = cb.or(textPredicate.toArray(new Predicate[]{}));
         Predicate andPredicate = cb.and(predicates.toArray(new Predicate[]{}));
-        cq.where(orPredicate, andPredicate);
+        if (textPredicate.size() > 0) {
+            cq.where(orPredicate, andPredicate);
+        } else {
+            cq.where(andPredicate);
+        }
         TypedQuery<Event> query = em.createQuery(cq);
         return query.setMaxResults(size).setFirstResult(from).getResultList();
     }

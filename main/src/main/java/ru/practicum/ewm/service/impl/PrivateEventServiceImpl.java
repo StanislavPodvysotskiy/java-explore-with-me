@@ -14,6 +14,7 @@ import ru.practicum.ewm.emun.State;
 import ru.practicum.ewm.emun.StateAction;
 import ru.practicum.ewm.exception.EventDateException;
 import ru.practicum.ewm.exception.EventUpdateException;
+import ru.practicum.ewm.exception.LikeDislikeDuplicateException;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.mapper.EventMapper;
 import ru.practicum.ewm.mapper.ParticipationMapper;
@@ -125,6 +126,55 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         }
         return EventMapper.makeEventFullDto(event);
     }
+
+    @Override
+    @Transactional
+    public EventFullDto addLike(Integer userId, Integer eventId) {
+        User user = getUserOrException(userId);
+        Event event = getEventOrException(eventId);
+        if (event.getLikes().contains(user)) {
+            throw new LikeDislikeDuplicateException("You can not like more than one time");
+        }
+        event.getDislikes().remove(user);
+        event.addLike(user);
+        return EventMapper.makeEventFullDto(event);
+    }
+
+    @Override
+    @Transactional
+    public EventFullDto addDislike(Integer userId, Integer eventId) {
+        User user = getUserOrException(userId);
+        Event event = getEventOrException(eventId);
+        if (event.getDislikes().contains(user)) {
+            throw new LikeDislikeDuplicateException("You can not dislike more than one time");
+        }
+        event.getLikes().remove(user);
+        event.addDislike(user);
+        return EventMapper.makeEventFullDto(event);
+    }
+
+    @Override
+    @Transactional
+    public void removeLike(Integer userId, Integer eventId) {
+        User user = getUserOrException(userId);
+        Event event = getEventOrException(eventId);
+        if (!event.getLikes().contains(user)) {
+            throw new LikeDislikeDuplicateException("You don't like this event yet");
+        }
+        event.removeLike(user);
+    }
+
+    @Override
+    @Transactional
+    public void removeDislike(Integer userId, Integer eventId) {
+        User user = getUserOrException(userId);
+        Event event = getEventOrException(eventId);
+        if (!event.getDislikes().contains(user)) {
+            throw new LikeDislikeDuplicateException("You don't dislike this event yet");
+        }
+        event.removeDislike(user);
+    }
+
 
     private User getUserOrException(Integer userId) {
         return userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User", userId));

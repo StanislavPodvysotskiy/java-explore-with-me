@@ -19,4 +19,12 @@ public interface PrivateEventService {
     EventFullDto saveEventByUser(Integer userId, NewEventDto newEventDto);
 
     EventFullDto updateEventByUser(Integer userId, Integer eventId, UpdateEventUserRequest updateEvent);
+
+    EventFullDto addLike(Integer userId, Integer eventId);
+
+    EventFullDto addDislike(Integer userId, Integer eventId);
+
+    void removeLike(Integer userId, Integer eventId);
+
+    void removeDislike(Integer userId, Integer eventId);
 }

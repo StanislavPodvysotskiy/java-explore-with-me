@@ -105,6 +105,14 @@ public class ApiError {
     }
 
     @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public CategoryErrorResponse handleLikesDislikes(final LikeDislikeDuplicateException e) {
+        log.info("409 {}", e.getMessage());
+        String cause = "Duplicate or missing like or dislike.";
+        return new CategoryErrorResponse(HttpStatus.CONFLICT, cause, e.getMessage());
+    }
+
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public CategoryErrorResponse handleServerErrors(final Throwable e) {
         log.info("500 {}", e.getMessage());
