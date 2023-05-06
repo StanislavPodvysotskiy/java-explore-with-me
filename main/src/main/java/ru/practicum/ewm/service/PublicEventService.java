@@ -12,5 +12,5 @@ public interface PublicEventService {
     EventFullDto findEvent(Integer eventId);
 
     List<EventShortDto> findByParameters(String text, List<Integer> categories, Boolean paid, LocalDateTime rangeStart,
-                                 LocalDateTime rangeEnd, Boolean onlyAvailable, Sort sort, Integer from, Integer size);
+                    LocalDateTime rangeEnd, Boolean onlyAvailable, Sort sort, Double rate, Integer from, Integer size);
 }

@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "USERS")
@@ -18,4 +19,8 @@ public class User {
     private Integer id;
     private String email;
     private String name;
+    @ManyToMany(mappedBy = "likes")
+    private Set<Event> likes;
+    @ManyToMany(mappedBy = "dislikes")
+    private Set<Event> dislikes;
 }

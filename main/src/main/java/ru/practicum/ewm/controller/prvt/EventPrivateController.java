@@ -88,4 +88,38 @@ public class EventPrivateController {
                 response.getMethod(), response.getRequestURI(), userId);
         return privateRequestService.updateEventRequestStatusByUser(userId, eventId, updateRequest);
     }
+
+    @PostMapping("/{userId}/events/{eventId}/like")
+    public EventFullDto addLike(@PathVariable @Positive Integer userId,
+                                @PathVariable @Positive Integer eventId,
+                                HttpServletRequest response) {
+        log.info("получен {} запрос {}", response.getMethod(), response.getRequestURI());
+        return privateEventService.addLike(userId, eventId);
+    }
+
+    @PostMapping("/{userId}/events/{eventId}/dislike")
+    public EventFullDto addDislike(@PathVariable @Positive Integer userId,
+                                   @PathVariable @Positive Integer eventId,
+                                HttpServletRequest response) {
+        log.info("получен {} запрос {}", response.getMethod(), response.getRequestURI());
+        return privateEventService.addDislike(userId, eventId);
+    }
+
+    @DeleteMapping("/{userId}/events/{eventId}/like")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeLike(@PathVariable @Positive Integer userId,
+                           @PathVariable @Positive Integer eventId,
+                           HttpServletRequest response) {
+        log.info("получен {} запрос {}", response.getMethod(), response.getRequestURI());
+        privateEventService.removeLike(userId, eventId);
+    }
+
+    @DeleteMapping("/{userId}/events/{eventId}/dislike")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeDislike(@PathVariable @Positive Integer userId,
+                              @PathVariable @Positive Integer eventId,
+                              HttpServletRequest response) {
+        log.info("получен {} запрос {}", response.getMethod(), response.getRequestURI());
+        privateEventService.removeDislike(userId, eventId);
+    }
 }
